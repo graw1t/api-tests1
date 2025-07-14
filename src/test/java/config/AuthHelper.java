@@ -3,36 +3,37 @@ package config;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
-public class AuthHelper {
-    private static String sessionId;
+import javax.security.sasl.AuthenticationException;
 
-    public static String login() {
+public class AuthHelper {
+    private static String accessToken;
+    private static String refreshToken;
+
+    public static Response login(String login, String password) throws AuthenticationException {
         Response response = RestAssured.given()
                 .baseUri(ApiUrl.BASE_URL_AUTH)
                 .contentType("application/json")
-                .body("{\"login\": \"testuser\", \"password\": \"testpassword\"}")
+                .body("{\"login\": %s, \"password\": %s}".formatted(login,password))
                 .post("/login");
-
-        if (response.statusCode() == 200) {
-            // Предположим, что сервер возвращает cookie или токен в заголовках или теле.
-            // Например, cookie:
-            sessionId = response.getCookie("session_id");
-            return sessionId;
-        } else {
-            throw new RuntimeException("Login failed");
+            accessToken = response.getCookie("access_token");
+            refreshToken = response.getCookie("refresh_token");
+           return response;
         }
-    }
+
 
     public static void logout() {
-        if (sessionId != null) {
+        if (accessToken != null) {
             RestAssured.given()
                     .baseUri(ApiUrl.BASE_URL_AUTH)
-                    .cookie("session_id", sessionId)
+                    .cookie("access_token", accessToken)
                     .post("/logout");
         }
     }
 
-    public static String getSessionId() {
-        return sessionId;
+    public static String getAccessToken() {
+        return accessToken;
+    }
+    public static String getRefreshToken() {
+        return refreshToken;
     }
 }

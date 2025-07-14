@@ -1,8 +1,12 @@
 package tests;
 
-import org.junit.jupiter.api.*;
-import io.restassured.RestAssured;
 import config.AuthHelper;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.*;
+
+import javax.security.sasl.AuthenticationException;
+
 import static config.ApiUrl.BASE_URL_AUTH;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -10,9 +14,7 @@ public class AuthTests {
 
     @BeforeAll
     void setup() {
-        // Можно установить базовый URI глобально, если нужно:
         RestAssured.baseURI = BASE_URL_AUTH;
-        AuthHelper.login();
     }
 
     @AfterAll
@@ -21,9 +23,18 @@ public class AuthTests {
     }
 
     @Test
-    void testSuccessfulLogin() {
-        String sessionId = AuthHelper.getSessionId();
+    @DisplayName("Валидный логин")
+    void testSuccessfulLogin() throws AuthenticationException {
+        Response response = AuthHelper.login("testuser", "testpassword");
+        Assertions.assertEquals(200, response.statusCode());
+        String sessionId = AuthHelper.getAccessToken();
         Assertions.assertNotNull(sessionId);
-        // Можно дополнительно проверить, что сессия активна через API или куки.
+    }
+
+    @Test
+    @DisplayName("Невалидный логин")
+    void testWithoutLogin() throws AuthenticationException {
+        Response response = AuthHelper.login("werqew", "qweqewq");
+        Assertions.assertEquals(401, response.statusCode());
     }
 }
