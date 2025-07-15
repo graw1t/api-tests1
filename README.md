@@ -1,3 +1,45 @@
+# Структура проекта
+
+```plaintext
+main
+├── java
+│   └── org
+│       └── example
+│           └── dto
+│               └── TimeDto
+│               
+├── test
+│   └── java
+│       ├── config
+│       │   ├── ApiUrl
+│       │   └── AuthHelper
+│       └── tests
+│           ├── AuthTests
+│           ├── TimeApiTests
+│           └── WebSocketTests
+│           
+├── target
+├── .gitignore
+├── pom.xml
+└── README.md
+```
+
+# Инструкция по запуску
+
+Для запуска автотеста необходимо:
+
+1. Склонируйте репозиторий на свой компьютер с помощью команды:
+
+ ```
+ git clone https://github.com/graw1t/api-tests1.git
+```
+
+2. Запустите тесты с помощью команды:
+
+```
+mvn clean test
+```
+
 # Основные тест-кейсы REST API
 
 1. Успешный логин
