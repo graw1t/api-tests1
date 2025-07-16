@@ -1,4 +1,4 @@
-package config;
+package org.example.config;
 
 public class ApiUrl {
     public static final String BASE_URL_API = "http://47.91.23.134:8083";

@@ -2,7 +2,9 @@ package org.example.dto;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class TimeDto {
-    private int[] time;
+    private List<Integer> time;
 }

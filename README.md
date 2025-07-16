@@ -1,27 +1,31 @@
 # Структура проекта
 
 ```plaintext
-main
-├── java
-│   └── org
-│       └── example
-│           └── dto
-│               └── TimeDto
-│               
+src
+├── main
+│   ├── java
+│   │   └── org
+│   │       └── example
+│   │           ├── auth
+│   │           │   └── AuthHelper
+│   │           ├── config
+│   │           │   └── ApiUrl
+│   │           ├── dto
+│   │           │   ├── MessageDto
+│   │           │   ├── SubscriptionDto
+│   │           │   ├── TimeDto
+│   │           │   └── ValueDto
+│   │           └── util
+│   │               └── JsonUtil
+│   └── resources
 ├── test
 │   └── java
-│       ├── config
-│       │   ├── ApiUrl
-│       │   └── AuthHelper
+│       └── spec
+│           └── RequestSpec
 │       └── tests
 │           ├── AuthTests
-│           ├── TimeApiTests
+│           ├── RestApiTests
 │           └── WebSocketTests
-│           
-├── target
-├── .gitignore
-├── pom.xml
-└── README.md
 ```
 
 # Инструкция по запуску
@@ -73,7 +77,7 @@ WebSocket API
 4. Обработка ошибок (невалидные сообщения, disconnect)
 
 # Баг репорты
-## Название: testGetTime
+## Название: GET /TIME
 
 Описание: Тест предназначен для проверки получения времени с API по эндпоинту /time. В тесте ожидается статус-код 200, однако при выполнении API возвращает статус-код 201.
 

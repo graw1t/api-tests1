@@ -1,39 +1,33 @@
 package tests;
 
-import config.AuthHelper;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.example.auth.AuthHelper;
 import org.junit.jupiter.api.*;
 
-import javax.security.sasl.AuthenticationException;
-
-import static config.ApiUrl.BASE_URL_AUTH;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AuthTests {
 
-    @BeforeAll
-    void setup() {
-        RestAssured.baseURI = BASE_URL_AUTH;
-    }
-
-    @AfterAll
-    void teardown() {
-        AuthHelper.logout();
-    }
-
     @Test
-    @DisplayName("Валидный логин")
-    void testSuccessfulLogin() throws AuthenticationException {
+    @DisplayName("Валидный логин и логаут")
+    void testSuccessfulLogin() {
         Response response = AuthHelper.login("testuser", "testpassword");
         Assertions.assertEquals(200, response.statusCode());
-        String sessionId = AuthHelper.getAccessToken();
-        Assertions.assertNotNull(sessionId);
+        String accessToken = AuthHelper.getAccessToken();
+        Assertions.assertNotNull(accessToken);
+
+        // логаут с невалидным токеном
+        Response logoutResponse = AuthHelper.logout("invalid_token");
+        Assertions.assertEquals(401, logoutResponse.statusCode());
+
+        // логаут с валидным токеном
+        logoutResponse = AuthHelper.logout(accessToken);
+        Assertions.assertEquals(200, logoutResponse.statusCode());
     }
 
     @Test
     @DisplayName("Невалидный логин")
-    void testWithoutLogin() throws AuthenticationException {
+    void testWithoutLogin() {
         Response response = AuthHelper.login("werqew", "qweqewq");
         Assertions.assertEquals(401, response.statusCode());
     }
